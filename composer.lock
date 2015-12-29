@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a68bb675be2f51954c3024f2022d3e24",
+    "hash": "411285dc23abb430d527eaf855da6001",
+    "content-hash": "4a0268a5fc69804985f674fd0fe7f90f",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -244,6 +245,51 @@
                 "sql"
             ],
             "time": "2015-12-20 16:11:11"
+        },
+        {
+            "name": "illuminate/events",
+            "version": "v5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/events.git",
+                "reference": "189f1915846101ecb93a9b2fc2dadb1e8c7d1b42"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/illuminate/events/189f1915846101ecb93a9b2fc2dadb1e8c7d1b42.zip",
+                "reference": "189f1915846101ecb93a9b2fc2dadb1e8c7d1b42",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "5.2.*",
+                "illuminate/contracts": "5.2.*",
+                "illuminate/support": "5.2.*",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Events\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Events package.",
+            "homepage": "http://laravel.com",
+            "time": "2015-11-30 19:26:21"
         },
         {
             "name": "illuminate/support",

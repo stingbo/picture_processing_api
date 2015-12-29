@@ -7,6 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
-    $vendorDir . '/nikic/fast-route/src/functions.php',
     $vendorDir . '/illuminate/support/helpers.php',
+    $vendorDir . '/nikic/fast-route/src/functions.php',
 );

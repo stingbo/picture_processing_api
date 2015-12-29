@@ -1,26 +1,35 @@
 <?php
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
+
 
 // Autoload 自动载入
 require '../vendor/autoload.php';
 
 require '../models/idcard.php';
 
-$capsule = new Capsule;
-
-$capsule->addConnection(require '../config/database.php');
-
-$capsule->bootEloquent();
 
 // Create and configure Slim app
 $app = new \Slim\App;
 
 // Define app routes
 $app->get('/index/{name}', function ($request, $response, $args) {
-    $model = new Idcard();
+    $model = new Capsule();
+    $model->addConnection(require '../config/database.php');
+    $model->setEventDispatcher(new Dispatcher(new Container));
+    $model->setAsGlobal();
+    $model->bootEloquent();
+    $idcard = Capsule::table('tiantian_idcard')->where('id', '=', 1)->get();
+
+    echo 'aaaa';
+    echo '<pre>';
+    print_r($idcard);
+
+    //$model = new Idcard();
     //$model::all();
-    $model->getList();
+    //$model->getList();
 });
 
 $app->post('/index/{name}', function ($request, $response, $args) {
