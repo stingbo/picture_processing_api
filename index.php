@@ -24,5 +24,19 @@ $app->delete('/index/{name}', function ($request, $response, $args) {
     echo 'This is a DELETE route';
 });
 
+//中间件的使用
+$mw = function ($request, $response, $next) {
+    $response->write('BEFORE');
+    $response = $next($request, $response);
+    $response->write('AFTER');
+
+    return $response;
+};
+
+$app->get('/tickets/{name}/messages/{id}', function ($request, $response, $args) {
+    echo $args['name'];
+    echo $args['id'];
+})->add($mw);
+
 // Run app
 $app->run();
