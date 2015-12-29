@@ -1,17 +1,24 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Idcard extends Capsule{
+class Idcard extends Eloquent{
 
-    //protected $table = 'tiantian_idcard';
+    protected $table = 'tiantian_idcard';
 
-    //public $timestamps = false;
+    public $timestamps = false;
 
-    public function getList () {
-        //$all = self::find(1);
-        $users = self::table('tiantian_idcard')->where('id', '=', 1)->get();
-        return $users;
-        //print_r($all);
+    public function getList() {
+        $all = self::all()->toArray();
+        return $all;
+    }
+
+    public function createIdcard() {
+    }
+
+    public function updateIdcard() {
+    }
+
+    public function deleteIdcard($id) {
     }
 }
