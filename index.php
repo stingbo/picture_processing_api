@@ -1,4 +1,6 @@
 <?php
+
+// Autoload 自动载入
 require 'vendor/autoload.php';
 
 // Create and configure Slim app
