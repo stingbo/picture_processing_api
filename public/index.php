@@ -14,7 +14,7 @@ $app = new \Slim\App;
 $mw = function ($request, $response, $next) {
     //$response->write('BEFORE');
     $model = new Capsule();
-    $model->addConnection(require '../config/database.php');
+    $model->addConnection(require '../config/database-local.php');
     $model->setEventDispatcher(new Dispatcher(new Container));
     $model->setAsGlobal();
     $model->bootEloquent();
