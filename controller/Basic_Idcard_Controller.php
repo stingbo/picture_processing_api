@@ -1,18 +1,16 @@
 <?php
 
-require '../models/idcard.php';
+require '../models/Basic_Idcard.php';
 
-class Idcard_controller {
+class Basic_Idcard_Controller {
 
-    protected $idcard_obj;
+    protected $basic_idcard;
 
     public function __construct() {
     }
 
     public function get() {
-        $this->idcard_obj = new Idcard();
-        $rst = $this->idcard_obj->getList();
-        return $rst;
+
     }
 
     public function post() {

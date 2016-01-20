@@ -13,49 +13,57 @@ $app = new \Slim\App;
 //中间件的使用
 $mw = function ($request, $response, $next) {
     //$response->write('BEFORE');
+
     $model = new Capsule();
     $model->addConnection(require '../config/database-local.php');
     $model->setEventDispatcher(new Dispatcher(new Container));
     $model->setAsGlobal();
     $model->bootEloquent();
     $response = $next($request, $response);
+
     //$response->write('AFTER');
 
     return $response;
 };
 
+$app->add($mw);
+
 // Define app routes
-$app->get('/index/{name}', function ($request, $response, $args) {
-    $id = Capsule::table('tiantian_idcard')->where('id', '=', 2)->get();
-    print_r($id);
-})->add($mw);
-
 $app->get('/idcard/{name}', function ($request, $response, $args) {
-    require '../controller/idcard_controller.php';
+    require '../controller/Idcard_Controller.php';
 
-    $obj = new Idcard_controller();
-    $all = $obj->get();
-    print_r($all);
+    $idcard = new Idcard_Controller();
+    $user = $idcard->getByName($args['name']);
 
-    return $all;
-})->add($mw);
+    if ($user == false || empty($user)) {
+        $status = 404;
+        $result = ['errcode' => $status, 'message' => '没有此信息'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        $status = 200;
+        $result = ['errcode' => $status, 'message' => '请求成功', 'data' => $user];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 
-$app->post('/index/{name}', function ($request, $response, $args) {
-    echo 'This is a POST route';
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($res);
+    return $response;
 });
 
-$app->put('/index/{name}', function ($request, $response, $args) {
-    echo 'This is a PUT route';
+$app->post('/idcard/{name}', function ($request, $response, $args) {
+
 });
 
-$app->delete('/index/{name}', function ($request, $response, $args) {
-    echo 'This is a DELETE route';
-});
+//创建图片
+$app->get('/image/{name}', function ($request, $response, $args) {
+    require '../controller/Create_Image_Controller.php';
 
-$app->get('/tickets/{name}/messages/{id}', function ($request, $response, $args) {
+    $image = new Create_Image_Controller();
+    //$result = $image->post();
     echo $args['name'];
-    echo $args['id'];
-})->add($mw);
+
+});
 
 // Run app
 $app->run();

@@ -10,12 +10,12 @@ return [
 
   'username'  => 'root',
 
-  'password'  => 'wanlianbo',
+  'password'  => '',
 
   'charset'   => 'utf8',
 
   'collation' => 'utf8_general_ci',
 
-  'prefix'    => ''
+  'prefix'    => 'tiantian_'
 
   ];
