@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * 公共使用的类
+ *
+ * @author ${bobo}
+ */
 class Common {
 
     /**
@@ -67,8 +72,43 @@ class Common {
     }
 
     /**
-     * 接口返回
+     * 返回身份证有效期信息(手动计算)
+     *
+     * @param    string    $idcard_no    身份证号
+     * @return   array
      */
-    public function response() {
+    public function getExpired($idcard_no) {
+        $expired = [];
+
+        $year  = substr($idcard_no, 6, 4);
+        $month = substr($idcard_no, 10, 2);
+        $day   = substr($idcard_no, 12, 2);
+
+        $birthday = $year . '.' . $month . '.' . $day;
+        $new = date('Y.m.d');
+        $diff = $new - $birthday;
+
+        $expired_day = rand(1, 28);
+        if ($expired_day < 10) {
+            $expired_day = '.0' . $expired_day; 
+        } else {
+            $expired_day = '.' . $expired_day; 
+        }
+
+        if ($diff < 16) {
+            $expired['expired_start'] = $birthday + ($diff - 1) . $expired_day;
+            $expired['expired_end']   = $birthday + ($diff + 4) . $expired_day;
+        } elseif ($diff >= 16 && $diff <= 26) {
+            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
+            $expired['expired_end']   = $birthday + ($diff + 8) . $expired_day;
+        } elseif ($diff > 26 && $diff <= 46) {
+            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
+            $expired['expired_end']   = $birthday + ($diff + 18). $expired_day;
+        } else {
+            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
+            $expired['expired_end']   = '长期';
+        }
+
+        return $expired;
     }
 }

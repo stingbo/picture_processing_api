@@ -5,6 +5,9 @@ require '../models/Basic_Idcard.php';
 require '../models/Position.php';
 require '../common/Common.php';
 
+/**
+ * 获取身份证信息
+ */
 class Idcard_Controller {
 
     protected $common;
@@ -67,7 +70,12 @@ class Idcard_Controller {
                                 if ($positions == false || empty($positions)) continue;
                             }
 
+                            //地址信息
                             $pos_key = array_rand($positions, 1);
+
+                            //身份证有效期信息
+                            $expired = $this->common->getExpired($value['idcard_no']);
+
                             $data['name']       = $name;
                             $data['gender']     = $res['result']['sex'] == '男' ? 1 : 0;
                             $data['nation']     = '汉';
@@ -77,9 +85,10 @@ class Idcard_Controller {
                             $data['city']       = $positions[$pos_key]['city_name'];
                             $data['county']     = $positions[$pos_key]['county_name'];
                             $data['full_address'] = $data['province'] . $data['city'] . $data['county'] . $positions[$pos_key]['town_name'] . $positions[$pos_key]['village_name'];
-
+                            $data['expired_start'] = $expired['expired_start'];
+                            $data['expired_end']   = $expired['expired_end'];
                             $data['is_portion_validate'] = 1;
-                            $data['created_at'] = date('Y-m-d H:i:s');
+                            $data['created_at']    = date('Y-m-d H:i:s');
 
                             //保存
                             Idcard::createIdcard($data);
@@ -99,17 +108,5 @@ class Idcard_Controller {
         }
 
         return $user;
-    }
-
-    public function post() {
-
-    }
-
-    public function put() {
-
-    }
-
-    public function del() {
-
     }
 }

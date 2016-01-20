@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 合成身份证图片
+ */
 class Create_Image_Controller {
 
     public function __construct() {
