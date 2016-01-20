@@ -56,11 +56,11 @@ $app->post('/idcard/{name}', function ($request, $response, $args) {
 });
 
 //创建图片
-$app->get('/image/{name}', function ($request, $response, $args) {
-    require '../controller/Create_Image_Controller.php';
+$app->post('/image/{name}', function ($request, $response, $args) {
+    require '../controller/Image_Controller.php';
 
-    $image = new Create_Image_Controller();
-    //$result = $image->post();
+    $image = new Image_Controller();
+    $result = $image->createImg();
     echo $args['name'];
 
 });
