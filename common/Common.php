@@ -99,13 +99,16 @@ class Common {
             $expired['expired_start'] = $birthday + ($diff - 1) . $expired_day;
             $expired['expired_end']   = $birthday + ($diff + 4) . $expired_day;
         } elseif ($diff >= 16 && $diff <= 26) {
-            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
-            $expired['expired_end']   = $birthday + ($diff + 8) . $expired_day;
+            $year = rand(1, 5);
+            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
+            $expired['expired_end']   = $birthday + ($diff - $year + 10) . $expired_day;
         } elseif ($diff > 26 && $diff <= 46) {
-            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
-            $expired['expired_end']   = $birthday + ($diff + 18). $expired_day;
+            $year = rand(3, 10);
+            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
+            $expired['expired_end']   = $birthday + ($diff - $year + 20). $expired_day;
         } else {
-            $expired['expired_start'] = $birthday + ($diff - 2) . $expired_day;
+            $year = rand(1, 10);
+            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
             $expired['expired_end']   = '长期';
         }
 
