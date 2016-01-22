@@ -37,12 +37,11 @@ $app->get('/idcard/{name}', function ($request, $response, $args) {
 
     if ($user == false || empty($user)) {
         $status = 404;
-        $result = ['errcode' => $status, 'message' => '没有此信息'];
+        $result = ['message' => '没有此信息'];
         $res = json_encode($result, JSON_UNESCAPED_UNICODE);
     } else {
         $status = 200;
-        $result = ['errcode' => $status, 'message' => '请求成功', 'data' => $user];
-        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+        $res = json_encode($user, JSON_UNESCAPED_UNICODE);
     }
 
     $response = $response->withStatus($status)
@@ -77,13 +76,43 @@ $app->post('/image', function ($request, $response, $args) {
     $data = $request->getParsedBody();
     $result = $image->createImg($data['user_list']);
 
-    $status = 200;
-    $result = ['message' => '请求成功'];
-    $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    if (isset($result) && !empty($result)) {
+        $status = 201;
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        $status = 400;
+        $result = ['message' => '创建失败'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
     $response = $response->withStatus($status)
         ->withHeader('Content-Type', 'application/json')
         ->write($res);
     return $response;
+
+});
+
+//获取图片
+$app->post('/images', function ($request, $response, $args) {
+    require '../controller/Image_Controller.php';
+
+    $image = new Image_Controller();
+
+    $data = $request->getParsedBody();
+    $result = $image->downloadImg($data);
+
+    //if (isset($result) && !empty($result)) {
+        //$status = 201;
+        //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
+        //$res = json_encode($data, JSON_UNESCAPED_UNICODE);
+    //} else {
+        //$status = 400;
+        //$result = ['message' => '创建失败'];
+        //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    //}
+    //$response = $response->withStatus($status)
+        //->withHeader('Content-Type', 'application/json')
+        //->write($res);
+    //return $response;
 
 });
 
