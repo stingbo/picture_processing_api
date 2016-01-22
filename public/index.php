@@ -51,17 +51,39 @@ $app->get('/idcard/{name}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->post('/idcard/{name}', function ($request, $response, $args) {
+//用姓名批量获取用户信息
+$app->post('/userinfo', function ($request, $response, $args) {
+    require '../controller/Idcard_Controller.php';
 
+    $idcard = new Idcard_Controller();
+
+    $names = $request->getParsedBody();
+    $users = $idcard->getByBatchName($names['user_list']);
+
+    $status = 200;
+    $result = json_encode($users, JSON_UNESCAPED_UNICODE);
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($result);
+    return $response;
 });
 
 //创建图片
-$app->post('/image/{name}', function ($request, $response, $args) {
+$app->post('/image', function ($request, $response, $args) {
     require '../controller/Image_Controller.php';
 
     $image = new Image_Controller();
-    $result = $image->createImg();
-    echo $args['name'];
+
+    $data = $request->getParsedBody();
+    $result = $image->createImg($data['user_list']);
+
+    //$status = 200;
+    //$result = ['errcode' => $status, 'message' => '请求成功', 'data' => ['one' => 'test', 'two' => 'aa']];
+    //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    //$response = $response->withStatus($status)
+        //->withHeader('Content-Type', 'application/json')
+        //->write($res);
+    //return $response;
 
 });
 

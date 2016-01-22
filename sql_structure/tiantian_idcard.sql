@@ -26,5 +26,6 @@ CREATE TABLE `tiantian_idcard` (
   `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
+  KEY `idcard_no` (`idcard_no`),
   UNIQUE KEY `name_idcard_no` (`name`,`idcard_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='身份证系统表';

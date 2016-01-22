@@ -93,6 +93,8 @@ class Idcard_Controller {
                             //保存
                             Idcard::createIdcard($data);
 
+                            $user = $data;
+
                             break;
                         } else {
                             continue;
@@ -102,11 +104,30 @@ class Idcard_Controller {
                         continue;
                     }
                 }
-
-                $user = Idcard::getOneByName($name);
             }
         }
 
         return $user;
+    }
+
+    /**
+     * 批量获取用户信息
+     * 
+     * @param    string    $names    用户姓名
+     * @return   array
+     */
+    public function getByBatchName($names) {
+        $user_info = [];
+        foreach ($names as $key => $val) {
+            $info = $this->getByName($val['name']);
+            if ($info !== false && !empty($info)) {
+                $user_info[] = $info;
+            } else {
+                $emptyinfo['name'] = $val['name'];
+                $emptyinfo['code'] = 404;
+                $user_info[] = $emptyinfo;
+            }
+        }
+        return $user_info;
     }
 }
