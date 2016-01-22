@@ -35,26 +35,38 @@ class Image_Controller {
         if ( ! is_dir($filepath)) mkdir($filepath, 0777, TRUE);
 
         $style['font'] = $this->font_path;
-        $style['font_size'] = 12;
+        $style['font_size'] = 20;
 
         $image = new Lib_Imagick();
 
-        //反面原始圖片
-        $image->open($this->idcard_back_img_path);
+        foreach ($detail_info as $key => $val) {
 
-        //打印文字
-        $image->add_text('中国公安局', 180, 60, 0, $style);
+            //反面原始圖片
+            $image->open($this->idcard_back_img_path);
 
-        //新圖片保存地址，如果不保留原始圖片可直接寫原路徑進行覆蓋即可
-        $image->save_to($filepath . 'back.jpg');
+            //打印文字
+            $image->add_text($val['issuing_authority'], 250, 102, 0, $style);
+            $image->add_text($val['expired_start'] . '-' . $val['expired_end'], 250, 62, 0, $style);
 
-        //正面原始圖片
-        $image->open($this->idcard_front_img_path);
+            //新圖片保存地址，如果不保留原始圖片可直接寫原路徑進行覆蓋即可
+            $image->save_to($filepath . $val['idcard_no'] . '_2.jpg');
 
-        //合成图片
-        $image->compositeImage(260, 40, $head);
+            //正面原始圖片
+            $image->open($this->idcard_front_img_path);
 
-        //新圖片保存地址，如果不保留原始圖片可 直接寫原路徑進行覆蓋即可
-        $image->save_to($filepath . 'front.jpg');
+            //打印文字
+            $image->add_text($val['name'], 140, 302, 0, $style);
+            $image->add_text($val['gender'], 140, 270, 0, $style);
+            $image->add_text($val['nation'], 240, 270, 0, $style);
+            $image->add_text($val['birthday'], 140, 240, 0, $style);
+            $image->add_text($val['detail_address'], 140, 190, 0, $style);
+            $image->add_text($val['idcard_no'], 190, 62, 0, $style);
+
+            //合成图片
+            $image->compositeImage(460, 40, $head);
+
+            //新圖片保存地址，如果不保留原始圖片可 直接寫原路徑進行覆蓋即可
+            $image->save_to($filepath . $val['idcard_no'] . '_1.jpg');
+        }
     }
 }

@@ -77,13 +77,13 @@ $app->post('/image', function ($request, $response, $args) {
     $data = $request->getParsedBody();
     $result = $image->createImg($data['user_list']);
 
-    //$status = 200;
-    //$result = ['errcode' => $status, 'message' => '请求成功', 'data' => ['one' => 'test', 'two' => 'aa']];
-    //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
-    //$response = $response->withStatus($status)
-        //->withHeader('Content-Type', 'application/json')
-        //->write($res);
-    //return $response;
+    $status = 200;
+    $result = ['message' => '请求成功'];
+    $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($res);
+    return $response;
 
 });
 
