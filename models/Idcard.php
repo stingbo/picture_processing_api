@@ -47,7 +47,13 @@ class Idcard extends Eloquent{
      * @param   array    $data        要更新的数据
      */
     public static function updateIdcard($data) {
-        self::where('name', '=', $data['name'])->update(['idcard_front_img_false' => $data['front'], 'idcard_back_img_false' => $data['back']]);
+        self::where('idcard_no', '=', $data['idcard_no'])
+            ->update([
+                'idcard_front_img_false' => $data['front'],
+                'idcard_back_img_false' => $data['back'],
+                'idcard_both_img_false' => $data['both'],
+                'issuing_authority' => $data['issuing_authority']
+            ]);
     }
 
     /**
@@ -56,7 +62,15 @@ class Idcard extends Eloquent{
      * @param   string    $idcard_no        身份证号
      */
     public static function getIdcardImg($idcard_no) {
-        $user = self::select(['idcard_front_img_false', 'idcard_back_img_false'])
+        $user = self::select([
+            'gender',
+            'idcard_front_img',
+            'idcard_back_img',
+            'idcard_both_img',
+            'idcard_front_img_false',
+            'idcard_back_img_false',
+            'idcard_both_img_false'
+        ])
             ->where('idcard_no', '=', $idcard_no)
             ->get()
             ->first();

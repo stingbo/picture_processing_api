@@ -19,13 +19,17 @@ class Lib_Imagick {
     }
 
     // 載入圖像
-    public function open($path)
+    public function open($path = '')
     {
-        $this->image = new Imagick($path);
-        if($this->image)
-        {
-            $this->type = strtolower($this->image->getImageFormat());
-        }
+        if (!empty($path)) {
+            $this->image = new Imagick($path);
+            if($this->image)
+            {
+                $this->type = strtolower($this->image->getImageFormat());
+            }
+        } else {
+            $this->image = new Imagick();
+        } 
         return $this->image;
     }
 
@@ -352,18 +356,39 @@ class Lib_Imagick {
         $this->image->compositeImage($image, Imagick::COMPOSITE_OVER, $x, $y);
     }
 
+    /**
+     * 把front和back合成到画布上
+     *
+     * @param    integer    $bg_width    画布的宽度
+     * @param    integer    $bg_heitht   画布的高度
+     * @param    integer    $bg_color    画布的颜色
+     */
+    public function compositeBothImage($bg_width = 595, $bg_height = 842, $bg_color = 'white', $front, $back)
+    {
+        //构建正反两面图片的画布
+        $this->image->newimage($bg_width, $bg_height, $bg_color);
+        $this->image->setimageformat('png');
+
+        $bg_front = new Imagick($front);
+        $this->image->compositeimage($bg_front, Imagick::COMPOSITE_OVER, 120, 110);
+
+        $bg_back = new Imagick($back);
+        $this->image->compositeimage($bg_back, Imagick::COMPOSITE_OVER, 120, 450);
+    }
 
     // 保存到指定路徑
     public function save_to($path)
     {
+        $result = false;
         if($this->type=='gif')
         {
-            $this->image->writeImages($path, true);
+            $result = $this->image->writeImages($path, true);
         }
         else
         {
-            $this->image->writeImage($path);
+            $result = $this->image->writeImage($path);
         }
+        return $result;
     }
 
     // 輸出圖像
