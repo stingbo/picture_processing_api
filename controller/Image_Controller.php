@@ -50,7 +50,7 @@ class Image_Controller {
         //$this->idcard_back_img_path  = $this->material_path . 'images/back_thumb.jpg';
         $this->idcard_front_img_path = $this->material_path . 'images/front.jpg';
         $this->idcard_back_img_path  = $this->material_path . 'images/back.jpg';
-        $this->font_path  = $this->material_path . 'fonts/idcard_font.ttf';
+        $this->font_path  = $this->material_path . 'fonts/';
         $this->save_path  = $this->material_path . 'uploads/';
     }
 
@@ -64,9 +64,6 @@ class Image_Controller {
         $filepath = $this->save_path . date('Ymd') . '/';
 
         if ( ! is_dir($filepath)) mkdir($filepath, 0777, TRUE);
-
-        $style['font'] = $this->font_path;
-        $style['font_size'] = 14;
 
         $image = new Lib_Imagick();
 
@@ -86,7 +83,22 @@ class Image_Controller {
         array_pop($female_heads);
         shuffle($female_heads);
 
+        //方正黑体简体
+        $style_fzhtjt['font'] = $this->font_path . 'FZHTJW.TTF';
+        $style_fzhtjt['fill_color'] = '#4b424a';
+
+        //方正细黑简体
+        $style_fzxhjt['font'] = $this->font_path . 'FZXH1JW.TTF';
+        //$style_fzxhjt['fill_color'] = '#4b424a';
+
+        //OCR-B字体
+        $style_ocr['font'] = $this->font_path . 'OCRB10N.TTF';
+        $style_ocr['fill_color'] = '#4b424a';
+
         foreach ($detail_info as $key => $val) {
+
+            //如果缺少信息，则进行下一条
+            if (empty($val['name']) || empty($val['gender']) || empty($val['nation']) || empty($val['birthday']) || empty($val['detail_address']) || empty($val['idcard_no']) || empty($val['issuing_authority']) || empty($val['expired_start']) || empty($val['expired_end'])) continue;
 
             //查询此身份号是否已有图片，有则不重新创建
             $img_info = Idcard::getIdcardImg($val['idcard_no']);
@@ -114,7 +126,7 @@ class Image_Controller {
                 $female ++;
             }
 
-            //正面原始圖片
+            //-------------正面圖片制作start-------------
             $image->open($this->idcard_front_img_path);
 
             //地址切割换行
@@ -132,39 +144,56 @@ class Image_Controller {
             }
 
             if ($birthday[0][2] < 10) {
-                $left_day = 150;
+                $left_day = 151;
                 $birthday[0][2] = (int)$birthday[0][2];
             } else {
                 $left_day = 146;
             }
 
             //打印文字
-            $image->add_text($val['name'], 65, 175, 0, $style);
-            $image->add_text($val['gender'], 65, 149, 0, $style);
-            $image->add_text($val['nation'], 139, 149, 0, $style);
-            $image->add_text($birthday[0][0], 65, 123, 0, $style);
-            $image->add_text($birthday[0][1], $left_month, 123, 0, $style);
-            $image->add_text($birthday[0][2], $left_day, 123, 0, $style);
-            $image->add_text($address_before . "\r\n" . $address_after, 65, 78, 0, $style);
-            $image->add_text($val['idcard_no'], 109, 27, 0, $style);
+            //$style_fzxhjt['font_size'] = 16;
+            $style_fzhtjt['font_size'] = 15;
+            if (mb_strlen($val['name']) == 2) {
+                $name_one = mb_substr($val['name'], 0, 1);
+                $name_two = mb_substr($val['name'], 1);
+                $image->add_text($name_one . ' ' . $name_two, 67, 176, 0, $style_fzhtjt);
+            } else {
+                $image->add_text($val['name'], 67, 176, 0, $style_fzhtjt);
+            }
+
+            $style_fzhtjt['font_size'] = 13;
+            $image->add_text($val['gender'], 67, 151, 0, $style_fzhtjt);
+            $image->add_text($val['nation'], 138, 151, 0, $style_fzhtjt);
+            $image->add_text($address_before . "\r\n" . $address_after, 67, 83, 0, $style_fzhtjt);
+
+            $style_fzhtjt['font_size'] = 13;
+            $image->add_text($birthday[0][0], 66, 125, 0, $style_fzhtjt);
+            $image->add_text($birthday[0][1], $left_month, 125, 0, $style_fzhtjt);
+            $image->add_text($birthday[0][2], $left_day, 125, 0, $style_fzhtjt);
+
+            $style_ocr['font_size'] = 16;
+            $image->add_text($val['idcard_no'], 115, 27, 0, $style_ocr);
 
             //合成图片
-            $image->compositeImage(225, 36, $head);
+            $image->compositeImage(216, 36, $head);
 
-            //新圖片保存地址，如果不保留原始圖片可 直接寫原路徑進行覆蓋即可
+            //图片保存地址
             $front = $filepath . $val['idcard_no'] . '_1.jpg';
             $front_res = $image->save_to($front);
+            //-------------正面圖片制作end-------------
 
-            //反面原始圖片
+            //-------------反面圖片制作start-------------
             $image->open($this->idcard_back_img_path);
 
             //打印文字
-            $image->add_text($val['issuing_authority'], 146, 53, 0, $style);
-            $image->add_text($val['expired_start'] . '-' . $val['expired_end'], 146, 25, 0, $style);
+            $style_fzhtjt['font_size'] = 13;
+            $image->add_text($val['issuing_authority'], 146, 55, 0, $style_fzhtjt);
+            $image->add_text($val['expired_start'] . '-' . $val['expired_end'], 146, 27, 0, $style_fzhtjt);
 
-            //新圖片保存地址，如果不保留原始圖片可直接寫原路徑進行覆蓋即可
+            //图片保存地址
             $back = $filepath . $val['idcard_no'] . '_2.jpg';
             $back_res = $image->save_to($back);
+            //-------------反面圖片制作end-------------
 
             //正反两面的合成
             $image->open();

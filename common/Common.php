@@ -8,6 +8,13 @@
 class Common {
 
     /**
+     * 解密公钥路径
+     *
+     * @var string
+     */
+    protected $publicKeyFilePath = __DIR__ . '/../assets/cert';
+
+    /**
      * CURL 请求
      */
     public function request($url, $params = array(), $method = 'GET', $multi = false, $extheaders = array()) {
@@ -113,5 +120,29 @@ class Common {
         }
 
         return $expired;
+    }
+
+    /**
+     * 使用公钥加密信息
+     */
+    public function decrypt($client, $encryptData) {
+
+        //公钥文件的路径
+        $publicKeyFilePath = $this->publicKeyFilePath . '/' . $client . '.pem';
+
+        if(!extension_loaded('openssl')) return false;
+
+        if(!file_exists($publicKeyFilePath)) return false;
+
+        //生成Resource类型的公钥，如果公钥文件内容被破坏，openssl_pkey_get_public函数返回false
+        $publicKey = openssl_pkey_get_public(file_get_contents($publicKeyFilePath));
+
+        if(!$publicKey) return false;
+
+        if (openssl_public_decrypt($encryptData, $decryptData, $publicKey)) {  
+            return $decryptData;
+        } else {
+            return false;
+        }
     }
 }

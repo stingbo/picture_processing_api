@@ -12,7 +12,34 @@ $app = new \Slim\App;
 
 //中间件的使用
 $mw = function ($request, $response, $next) {
-    //$response->write('BEFORE');
+
+    $mark = false;
+    if ($request->hasHeader('HTTP_SIGN') && $request->hasHeader('HTTP_CLIENT')) {
+        require '../common/Common.php';
+        $common_model = new Common();
+
+        $sign = $request->getHeaderLine('HTTP_SIGN');
+        $client = $request->getHeaderLine('HTTP_CLIENT');
+
+        $code = $common_model->decrypt($client, base64_decode($sign));
+
+        if ($code != 'b610e0458b5512bf798eb4c0c2af1598') {
+            $mark = true;
+        }
+    } else {
+        $mark = true;
+    }
+
+    if ($mark) {
+        $status = 401;
+        $result = ['message' => '没有权限'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+
+        $response = $response->withStatus($status)
+            ->withHeader('Content-Type', 'application/json')
+            ->write($res);
+        return $response;
+    }
 
     $model = new Capsule();
     $model->addConnection(require '../config/database-local.php');
@@ -20,8 +47,6 @@ $mw = function ($request, $response, $next) {
     $model->setAsGlobal();
     $model->bootEloquent();
     $response = $next($request, $response);
-
-    //$response->write('AFTER');
 
     return $response;
 };

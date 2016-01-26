@@ -348,7 +348,7 @@ class Lib_Imagick {
     /**
      * 合成图片
      */
-    public function compositeImage($x = 0 , $y = 0, $path, $composite_x = 90, $composite_y = 110)
+    public function compositeImage($x = 0 , $y = 0, $path, $composite_x = 100, $composite_y = 115)
     {
         $image = new Imagick($path);
         $image->adaptiveResizeImage($composite_x, $composite_y);

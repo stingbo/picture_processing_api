@@ -3,7 +3,7 @@
 require '../models/Idcard.php';
 require '../models/Basic_Idcard.php';
 require '../models/Position.php';
-require '../common/Common.php';
+//require '../common/Common.php';
 
 /**
  * 获取身份证信息
