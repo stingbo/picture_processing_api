@@ -87,35 +87,41 @@ class Common {
     public function getExpired($idcard_no) {
         $expired = [];
 
-        $year  = substr($idcard_no, 6, 4);
-        $month = substr($idcard_no, 10, 2);
-        $day   = substr($idcard_no, 12, 2);
+        $birthday  = substr($idcard_no, 6, 4);
 
-        $birthday = $year . '.' . $month . '.' . $day;
-        $new = date('Y.m.d');
-        $diff = $new - $birthday;
-
-        $expired_day = rand(1, 28);
-        if ($expired_day < 10) {
-            $expired_day = '.0' . $expired_day; 
+        //生成随机月
+        $month = rand(1, 12);
+        if ($month < 10) {
+            $month = '.0' . $month;
         } else {
-            $expired_day = '.' . $expired_day; 
+            $month = '.' . $month;
         }
 
+        //生成随机天
+        $day = rand(1, 28);
+        if ($day < 10) {
+            $day = '.0' . $day;
+        } else {
+            $day = '.' . $day;
+        }
+
+        //按年龄差生成随机年
+        $new_year = date('Y');
+        $diff = $new_year - $birthday;
         if ($diff < 16) {
-            $expired['expired_start'] = $birthday + ($diff - 1) . $expired_day;
-            $expired['expired_end']   = $birthday + ($diff + 4) . $expired_day;
+            $expired['expired_start'] = $birthday + ($diff - 1) . $month . $day;
+            $expired['expired_end']   = $birthday + ($diff + 4) . $month . $day;
         } elseif ($diff >= 16 && $diff <= 26) {
             $year = rand(1, 5);
-            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
-            $expired['expired_end']   = $birthday + ($diff - $year + 10) . $expired_day;
+            $expired['expired_start'] = $birthday + ($diff - $year) . $month . $day;
+            $expired['expired_end']   = $birthday + ($diff - $year + 10) . $month . $day;
         } elseif ($diff > 26 && $diff <= 46) {
             $year = rand(3, 10);
-            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
-            $expired['expired_end']   = $birthday + ($diff - $year + 20). $expired_day;
+            $expired['expired_start'] = $birthday + ($diff - $year) . $month . $day;
+            $expired['expired_end']   = $birthday + ($diff - $year + 20) . $month . $day;
         } else {
             $year = rand(1, 10);
-            $expired['expired_start'] = $birthday + ($diff - $year) . $expired_day;
+            $expired['expired_start'] = $birthday + ($diff - $year) . $month . $day;
             $expired['expired_end']   = '长期';
         }
 
@@ -139,7 +145,7 @@ class Common {
 
         if(!$publicKey) return false;
 
-        if (openssl_public_decrypt($encryptData, $decryptData, $publicKey)) {  
+        if (openssl_public_decrypt($encryptData, $decryptData, $publicKey)) {
             return $decryptData;
         } else {
             return false;

@@ -75,6 +75,28 @@ $app->get('/idcard/{name}', function ($request, $response, $args) {
     return $response;
 });
 
+//创建用户身份证信息
+$app->post('/idcard', function ($request, $response, $args) {
+    require '../controller/Idcard_Controller.php';
+
+    $idcard = new Idcard_Controller();
+    $user = $idcard->createUser($args['name']);
+
+    if ($user == false || empty($user)) {
+        $status = 400;
+        $result = ['message' => '语法错误'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        $status = 201;
+        $res = json_encode($user, JSON_UNESCAPED_UNICODE);
+    }
+
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($res);
+    return $response;
+});
+
 //用姓名批量获取用户信息
 $app->post('/userinfo', function ($request, $response, $args) {
     require '../controller/Idcard_Controller.php';

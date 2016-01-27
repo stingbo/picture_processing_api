@@ -130,4 +130,13 @@ class Idcard_Controller {
         }
         return $user_info;
     }
+
+    /**
+     * 创建用户信息
+     * 
+     * @param    array    $user    用户信息
+     * @return   array
+     */
+    public function createUser($user) {
+    }
 }

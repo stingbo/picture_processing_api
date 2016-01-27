@@ -15,6 +15,18 @@ class Idcard extends Eloquent{
     //protected $fillable = ['name', 'gender', 'birthday', 'detail_address'];
 
     /**
+     * 是否部分验证
+     * @var intger
+     */
+    const IS_PORTION_VALIDATE = 1;
+
+    /**
+     * 是否经过付费接口验证
+     * @var intger
+     */
+    const IS_WHOLE_VALIDATE = 1;
+
+    /**
      * 根据姓名查找用户信息
      *
      * @param    string    $name    姓名
@@ -22,6 +34,7 @@ class Idcard extends Eloquent{
      */
     public static function getOneByName($name) {
         $user = self::where('name', '=', $name)
+            ->where('is_portion_validate', '=', self::IS_PORTION_VALIDATE)
             ->get()
             ->first();
 
