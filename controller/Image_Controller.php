@@ -92,7 +92,7 @@ class Image_Controller {
         //$style_fzxhjt['fill_color'] = '#4b424a';
 
         //OCR-B字体
-        $style_ocr['font'] = $this->font_path . 'OCRB10N.TTF';
+        $style_ocr['font'] = $this->font_path . 'Ocrb10n.ttf';
         $style_ocr['fill_color'] = '#4b424a';
 
         foreach ($detail_info as $key => $val) {
