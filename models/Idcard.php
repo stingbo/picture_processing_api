@@ -60,13 +60,28 @@ class Idcard extends Eloquent{
      * @param   array    $data        要更新的数据
      */
     public static function updateIdcard($data) {
-        self::where('idcard_no', '=', $data['idcard_no'])
-            ->update([
-                'idcard_front_img_false' => $data['front'],
-                'idcard_back_img_false' => $data['back'],
-                'idcard_both_img_false' => $data['both'],
-                'issuing_authority' => $data['issuing_authority']
-            ]);
+
+        if (isset($data['front'])) {
+            self::where('idcard_no', '=', $data['idcard_no'])
+                ->update([
+                    'idcard_front_img_false' => $data['front'],
+                ]);
+        }
+
+        if (isset($data['back'])) {
+            self::where('idcard_no', '=', $data['idcard_no'])
+                ->update([
+                    'idcard_back_img_false' => $data['back'],
+                ]);
+        }
+
+        if (isset($data['both'])) {
+            self::where('idcard_no', '=', $data['idcard_no'])
+                ->update([
+                    'idcard_both_img_false' => $data['both'],
+                    'issuing_authority' => $data['issuing_authority']
+                ]);
+        }
     }
 
     /**

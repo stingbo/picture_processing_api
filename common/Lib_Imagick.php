@@ -370,9 +370,11 @@ class Lib_Imagick {
         $this->image->setimageformat('png');
 
         $bg_front = new Imagick($front);
+        $bg_front->adaptiveResizeImage(320, 240);
         $this->image->compositeimage($bg_front, Imagick::COMPOSITE_OVER, 120, 110);
 
         $bg_back = new Imagick($back);
+        $bg_back->adaptiveResizeImage(320, 240);
         $this->image->compositeimage($bg_back, Imagick::COMPOSITE_OVER, 120, 450);
     }
 
