@@ -192,7 +192,7 @@ class Image_Controller {
             foreach ($img_path as $key => $val) {
 
                 //三张
-                if ($type == 'all') {
+                if ($zip_num == 'all') {
 
                     //如果有真实图片,则优先使用真实图片
                     if (isset($val['idcard_front_img']) && !empty($val['idcard_front_img'])) {
@@ -214,7 +214,7 @@ class Image_Controller {
                     }
 
                 //正反合一
-                } elseif ($type == 'both') {
+                } elseif ($zip_num == 'both') {
                     if (isset($val['idcard_both_img']) && !empty($val['idcard_both_img'])) {
                         $zip->addFile($val['idcard_both_img'], basename($val['idcard_both_img']));
                     } elseif (isset($val['idcard_both_img_false']) && !empty($val['idcard_both_img_false'])) {

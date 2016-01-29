@@ -109,4 +109,23 @@ class Idcard extends Eloquent{
             return false;
         }
     }
+
+    /**
+     * 根据身份证号查找用户信息
+     *
+     * @param    string    $name    身份证号
+     * @return   array
+     */
+    public static function getOneByIdcardNo($idcard_no) {
+        $user = self::where('idcard_no', '=', $idcard_no)
+            ->where('is_portion_validate', '=', self::IS_PORTION_VALIDATE)
+            ->get()
+            ->first();
+
+        if ($user != null) {
+            return $user->toArray();
+        } else {
+            return false;
+        }
+    }
 }

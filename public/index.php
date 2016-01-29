@@ -54,11 +54,34 @@ $mw = function ($request, $response, $next) {
 $app->add($mw);
 
 // Define app routes
-$app->get('/idcard/{name}', function ($request, $response, $args) {
+// 使用用户名获取用户信息
+$app->get('/idcard/name/{name}', function ($request, $response, $args) {
     require '../controller/Idcard_Controller.php';
 
     $idcard = new Idcard_Controller();
-    $user = $idcard->getByName($args['name']);
+    $user = $idcard->getUserInfo($args['name']);
+
+    if ($user == false || empty($user)) {
+        $status = 404;
+        $result = ['message' => '没有此信息'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        $status = 200;
+        $res = json_encode($user, JSON_UNESCAPED_UNICODE);
+    }
+
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($res);
+    return $response;
+});
+
+//使用身份证号获取用户信息
+$app->get('/idcard/idcard_no/{idcard_no}', function ($request, $response, $args) {
+    require '../controller/Idcard_Controller.php';
+
+    $idcard = new Idcard_Controller();
+    $user = $idcard->getUserInfo('', $args['idcard_no']);
 
     if ($user == false || empty($user)) {
         $status = 404;
@@ -80,15 +103,19 @@ $app->post('/idcard', function ($request, $response, $args) {
     require '../controller/Idcard_Controller.php';
 
     $idcard = new Idcard_Controller();
-    $user = $idcard->createUser($args['name']);
 
-    if ($user == false || empty($user)) {
+    $info = $request->getParsedBody();
+    $file = $request->getUploadedFiles();
+
+    $respon = $idcard->createUser($info, $file);
+
+    if ($respon['result'] == false) {
         $status = 400;
-        $result = ['message' => '语法错误'];
+        $result = ['message' => $respon['message']];
         $res = json_encode($result, JSON_UNESCAPED_UNICODE);
     } else {
         $status = 201;
-        $res = json_encode($user, JSON_UNESCAPED_UNICODE);
+        $res = json_encode($respon['data'], JSON_UNESCAPED_UNICODE);
     }
 
     $response = $response->withStatus($status)
@@ -145,21 +172,14 @@ $app->post('/images', function ($request, $response, $args) {
     $image = new Image_Controller();
 
     $data = $request->getParsedBody();
-    $result = $image->downloadImg($data);
 
-    //if (isset($result) && !empty($result)) {
-        //$status = 201;
-        //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
-        //$res = json_encode($data, JSON_UNESCAPED_UNICODE);
-    //} else {
-        //$status = 400;
-        //$result = ['message' => '创建失败'];
-        //$res = json_encode($result, JSON_UNESCAPED_UNICODE);
-    //}
-    //$response = $response->withStatus($status)
-        //->withHeader('Content-Type', 'application/json')
-        //->write($res);
-    //return $response;
+    if (isset($data['download_type']) && in_array($data['download_type'], ['both', 'all'])) {
+        $zip_num = $data['download_type'];
+    } else {
+        $zip_num = '';
+    }
+
+    $result = $image->downloadImg($data['idcard_list'], $zip_num);
 
 });
 
