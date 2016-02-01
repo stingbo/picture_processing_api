@@ -208,4 +208,45 @@ class Common {
 
         return $fileType;
     }
+
+    /**
+     * 记录接口请求日志
+     *
+     * @param    string    $filename    文件的名称
+     * @return   string
+     */
+    public function writeLog($header, $body, $response, $log_dir_path = '../logs/') {
+        $log_data = '请求时间:' . date('Y-m-d H:i:s') . "\r\n";
+        if (isset($header) && is_string($header) && !empty($header)) {
+            $header = $header;
+        } elseif (isset($header) && is_array($header)) {
+            $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        } else {
+            $header = '';
+        }
+        $log_data .= '请求头部:' . $header . "\r\n";
+
+        if (isset($body) && is_string($body) && !empty($body)) {
+            $body = $body;
+        } elseif (isset($body) && is_array($body)) {
+            $body = json_encode($body, JSON_UNESCAPED_UNICODE);
+        } else {
+            $body = '';
+        }
+        $log_data .= '请求消息体:' . $body . "\r\n";
+
+        if (isset($response) && is_string($response) && !empty($response)) {
+            $response = $response;
+        } elseif (isset($response) && is_array($response)) {
+            $response = json_encode($response, JSON_UNESCAPED_UNICODE);
+        } else {
+            $response = '' . "\r\n";
+        }
+        $log_data .= '返回结果:' . $response . "\r\n";
+
+        if ( ! is_dir($log_dir_path)) mkdir($log_dir_path, 0777, TRUE);
+        $log_path = $log_dir_path . date('Ymd') . '.log';
+
+        file_put_contents($log_path, $log_data, FILE_APPEND);
+    }
 }

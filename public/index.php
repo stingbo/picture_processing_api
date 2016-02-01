@@ -13,10 +13,11 @@ $app = new \Slim\App;
 //中间件的使用
 $mw = function ($request, $response, $next) {
 
+    require '../common/Common.php';
+    $common_model = new Common();
+
     $mark = false;
     if ($request->hasHeader('HTTP_SIGN') && $request->hasHeader('HTTP_CLIENT')) {
-        require '../common/Common.php';
-        $common_model = new Common();
 
         $sign = $request->getHeaderLine('HTTP_SIGN');
         $client = $request->getHeaderLine('HTTP_CLIENT');
@@ -38,6 +39,9 @@ $mw = function ($request, $response, $next) {
         $response = $response->withStatus($status)
             ->withHeader('Content-Type', 'application/json')
             ->write($res);
+
+        //记录日志
+        $common_model->writeLog($request->getHeaders(), $request->getParsedBody(), $res);
         return $response;
     }
 
@@ -47,6 +51,9 @@ $mw = function ($request, $response, $next) {
     $model->setAsGlobal();
     $model->bootEloquent();
     $response = $next($request, $response);
+
+    //记录日志
+    $common_model->writeLog($request->getHeaders(), $request->getParsedBody(), $response->getBody());
 
     return $response;
 };
