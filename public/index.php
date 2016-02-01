@@ -98,6 +98,29 @@ $app->get('/idcard/idcard_no/{idcard_no}', function ($request, $response, $args)
     return $response;
 });
 
+// 使用姓名和身份证号验证用户是否存在
+$app->get('/idcard/name/{name}/idcard_no/{idcard_no}', function ($request, $response, $args) {
+    require '../controller/Idcard_Controller.php';
+
+    $idcard = new Idcard_Controller();
+    $user = $idcard->verifyIdcardInfo($args);
+
+    if ($user == false || empty($user)) {
+        $status = 404;
+        $result = ['message' => '没有此信息'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        $status = 200;
+        $result = ['message' => 'success'];
+        $res = json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    $response = $response->withStatus($status)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($res);
+    return $response;
+});
+
 //创建用户身份证信息
 $app->post('/idcard', function ($request, $response, $args) {
     require '../controller/Idcard_Controller.php';

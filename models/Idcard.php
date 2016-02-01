@@ -128,4 +128,20 @@ class Idcard extends Eloquent{
             return false;
         }
     }
+
+    /**
+     * 根据姓名和身份证信息验证用户信息是否存在
+     *
+     * @param    string    $info    姓名
+     * @return   integer
+     */
+    public static function verifyIdcardInfo($info) {
+        $num = self::select('id')
+            ->where('name', '=', $info['name'])
+            ->where('idcard_no', '=', $info['idcard_no'])
+            ->where('is_whole_validate', '=', self::IS_WHOLE_VALIDATE)
+            ->count();
+
+        return $num;
+    }
 }

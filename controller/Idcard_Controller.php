@@ -206,4 +206,19 @@ class Idcard_Controller {
             return ['result' => false, 'message' => '接口所需信息不完整'];
         }
     }
+
+    /**
+     * 使用姓名和身份证号验证信息是否为真
+     *
+     * @param    array    $info    用户信息
+     * @return   bool
+     */
+    public function verifyIdcardInfo($info) {
+        $result = Idcard::verifyIdcardInfo($info);
+        if (isset($result) && $result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
