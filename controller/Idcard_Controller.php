@@ -182,9 +182,9 @@ class Idcard_Controller {
 
                         //如果都移动成功,保存到数据库
                         if ($front_move_rst && $back_move_rst) {
-                            $data['idcard_front_img']  = $front_save_path;
-                            $data['idcard_back_img']   = $back_save_path;
-                            $data['is_whole_validate'] = 1;
+                            $data['idcard_front_img']    = $front_save_path;
+                            $data['idcard_back_img']     = $back_save_path;
+                            $data['is_portion_validate'] = 1;
                         }
                     }
                 }
@@ -196,7 +196,7 @@ class Idcard_Controller {
 
             $data['name']       = $info['name'];
             $data['idcard_no']  = $info['idcard_no'];
-            $data['is_portion_validate'] = 1;
+            $data['is_whole_validate'] = 1;
             $data['created_at'] = date('Y-m-d H:i:s');
 
             //保存
