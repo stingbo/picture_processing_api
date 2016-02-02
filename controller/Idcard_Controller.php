@@ -199,8 +199,18 @@ class Idcard_Controller {
             $data['is_whole_validate'] = 1;
             $data['created_at'] = date('Y-m-d H:i:s');
 
-            //保存
-            Idcard::createIdcard($data);
+            try {
+
+                //保存
+                Idcard::createIdcard($data);
+            } catch (Exception $e) {
+                $code =  $e->getCode();
+                if ($code == 23000) {
+                    return ['result' => false, 'message' => '身份证信息已存在'];
+                } else {
+                    return ['result' => false, 'message' => '插入失败，请重试'];
+                }
+            }
             return ['result' => true, 'data' => $data];
         } else {
             return ['result' => false, 'message' => '接口所需信息不完整'];
