@@ -208,17 +208,35 @@ class Image_Controller {
                     }
 
                     if (isset($val['idcard_both_img']) && !empty($val['idcard_both_img'])) {
-                        $zip->addFile($val['idcard_both_img'], basename($val['idcard_both_img']));
+
+                        // 修改图片名称，保存时是身份证号后加_3，后续更改需求，要去掉，下同
+                        $fullname = pathinfo($val['idcard_both_img'], PATHINFO_FILENAME);
+                        $file_ext = pathinfo($val['idcard_both_img'], PATHINFO_EXTENSION);
+                        $fullname_arr = explode('_', $fullname);
+                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $zip->addFile($val['idcard_both_img'], $filename);
                     } elseif (isset($val['idcard_both_img_false']) && !empty($val['idcard_both_img_false'])) {
-                        $zip->addFile($val['idcard_both_img_false'], basename($val['idcard_both_img_false']));
+                        $fullname = pathinfo($val['idcard_both_img_false'], PATHINFO_FILENAME);
+                        $file_ext = pathinfo($val['idcard_both_img_false'], PATHINFO_EXTENSION);
+                        $fullname_arr = explode('_', $fullname);
+                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $zip->addFile($val['idcard_both_img_false'], $filename);
                     }
 
                 //正反合一
                 } elseif ($zip_num == 'both') {
                     if (isset($val['idcard_both_img']) && !empty($val['idcard_both_img'])) {
-                        $zip->addFile($val['idcard_both_img'], basename($val['idcard_both_img']));
+                        $fullname = pathinfo($val['idcard_both_img'], PATHINFO_FILENAME);
+                        $file_ext = pathinfo($val['idcard_both_img'], PATHINFO_EXTENSION);
+                        $fullname_arr = explode('_', $fullname);
+                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $zip->addFile($val['idcard_both_img'], $filename);
                     } elseif (isset($val['idcard_both_img_false']) && !empty($val['idcard_both_img_false'])) {
-                        $zip->addFile($val['idcard_both_img_false'], basename($val['idcard_both_img_false']));
+                        $fullname = pathinfo($val['idcard_both_img_false'], PATHINFO_FILENAME);
+                        $file_ext = pathinfo($val['idcard_both_img_false'], PATHINFO_EXTENSION);
+                        $fullname_arr = explode('_', $fullname);
+                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $zip->addFile($val['idcard_both_img_false'], $filename);
                     }
 
                 //正反面
