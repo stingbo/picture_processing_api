@@ -210,32 +210,20 @@ class Image_Controller {
                     if (isset($val['idcard_both_img']) && !empty($val['idcard_both_img'])) {
 
                         // 修改图片名称，保存时是身份证号后加_3，后续更改需求，要去掉，下同
-                        $fullname = pathinfo($val['idcard_both_img'], PATHINFO_FILENAME);
-                        $file_ext = pathinfo($val['idcard_both_img'], PATHINFO_EXTENSION);
-                        $fullname_arr = explode('_', $fullname);
-                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $filename = $this->getIdcardImgName($val['idcard_both_img']);
                         $zip->addFile($val['idcard_both_img'], $filename);
                     } elseif (isset($val['idcard_both_img_false']) && !empty($val['idcard_both_img_false'])) {
-                        $fullname = pathinfo($val['idcard_both_img_false'], PATHINFO_FILENAME);
-                        $file_ext = pathinfo($val['idcard_both_img_false'], PATHINFO_EXTENSION);
-                        $fullname_arr = explode('_', $fullname);
-                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $filename = $this->getIdcardImgName($val['idcard_both_img_false']);
                         $zip->addFile($val['idcard_both_img_false'], $filename);
                     }
 
                 //正反合一
                 } elseif ($zip_num == 'both') {
                     if (isset($val['idcard_both_img']) && !empty($val['idcard_both_img'])) {
-                        $fullname = pathinfo($val['idcard_both_img'], PATHINFO_FILENAME);
-                        $file_ext = pathinfo($val['idcard_both_img'], PATHINFO_EXTENSION);
-                        $fullname_arr = explode('_', $fullname);
-                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $filename = $this->getIdcardImgName($val['idcard_both_img']);
                         $zip->addFile($val['idcard_both_img'], $filename);
                     } elseif (isset($val['idcard_both_img_false']) && !empty($val['idcard_both_img_false'])) {
-                        $fullname = pathinfo($val['idcard_both_img_false'], PATHINFO_FILENAME);
-                        $file_ext = pathinfo($val['idcard_both_img_false'], PATHINFO_EXTENSION);
-                        $fullname_arr = explode('_', $fullname);
-                        $filename = $fullname_arr[0] . '.' . $file_ext;
+                        $filename = $this->getIdcardImgName($val['idcard_both_img_false']);
                         $zip->addFile($val['idcard_both_img_false'], $filename);
                     }
 
@@ -371,5 +359,19 @@ class Image_Controller {
         $result = $image->save_to($both);
 
         return $result;
+    }
+
+    /**
+     * 获取身份证正反合一的图片的名称，去掉_3后缀名
+     *
+     * @param    string    $path_and_filename    文件的路径
+     * @return   string    $filename             去掉后缀的文件名
+     */
+    private function getIdcardImgName($path_and_filename) {
+        $fullname = pathinfo($path_and_filename, PATHINFO_FILENAME);
+        $file_ext = pathinfo($path_and_filename, PATHINFO_EXTENSION);
+        $fullname_arr = explode('_', $fullname);
+        $filename = $fullname_arr[0] . '.' . $file_ext;
+        return $filename;
     }
 }
