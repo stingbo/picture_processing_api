@@ -129,7 +129,7 @@ class Common {
     }
 
     /**
-     * 使用公钥加密信息
+     * 使用公钥解密信息
      */
     public function decrypt($client, $encryptData) {
 
